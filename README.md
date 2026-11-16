@@ -20,3 +20,8 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+By default, opening the page in an iframe shows the previous placeholder with its
+developer panel and test FINISH/ERROR messages. Opening it directly starts the game.
+Set `placeholderInIframe` to `false` in `game.config.json` to run the game in
+iframes too.

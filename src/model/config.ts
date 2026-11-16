@@ -11,6 +11,9 @@ export type Profile = {
 export type Question = { id: number; text: string; answers: string[] };
 
 export type GameConfig = {
+  gameId: string;
+  placeholderInIframe: boolean;
+  placeholder: { name: string; teaser: string; topic: string; expected: string; version: string };
   defaultVariant: Variant | null;
   startPoints: number;
   shuffleButtons: boolean;

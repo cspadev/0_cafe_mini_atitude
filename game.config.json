@@ -1,5 +1,13 @@
 {
   "gameId": "0_cafe_mini_atitude",
+  "placeholderInIframe": true,
+  "placeholder": {
+    "name": "Rizikový profil",
+    "teaser": "Zjisti, jak moc rád riskuješ.",
+    "topic": "Postoj k riziku",
+    "expected": "",
+    "version": "0.1.0-placeholder"
+  },
   "defaultVariant": null,
   "startPoints": 100,
   "shuffleButtons": false,
