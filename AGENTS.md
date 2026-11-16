@@ -1,0 +1,2 @@
+- Minigame rules and numbers live in game.config.json; pure logic in src/model (testable without UI). Why: spec requires config-driven, testable model.
+- src/minihra-protokol.ts is a verbatim spec copy, loaded via dynamic import on the client only. Why: it touches window at module load.

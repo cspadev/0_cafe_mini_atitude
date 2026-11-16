@@ -1,0 +1,127 @@
+{
+  "gameId": "0_cafe_mini_atitude",
+  "defaultVariant": null,
+  "startPoints": 100,
+  "shuffleButtons": false,
+  "hintAfterSec": 10,
+  "flipMs": 900,
+  "flipStaggerMs": 300,
+  "transitionSec": 3,
+  "buttons": {
+    "jistota": { "label": "Jistota", "level": 0 },
+    "prilezitost": { "label": "Příležitost", "level": 1 },
+    "vrchol": { "label": "Vrchol", "level": 2 }
+  },
+  "variant1": {
+    "attempts": 3,
+    "attemptSeconds": 60,
+    "payoffs": {
+      "jistota": { "sun": 10, "cloud": 10 },
+      "prilezitost": { "sun": 20, "cloud": 0 },
+      "vrchol": { "sun": 100, "cloud": "reset" }
+    }
+  },
+  "variant2": {
+    "rounds": 10,
+    "scenario": "B",
+    "scenarios": {
+      "A": { "jistota": [-12, 0, 8, 20], "prilezitost": [-35, -10, 12, 50], "vrchol": [-60, 0, 0, 100] },
+      "B": { "jistota": [-12, 0, 8, 20], "prilezitost": [-50, -13, 20, 60], "vrchol": [-70, 0, 0, 100] }
+    }
+  },
+  "variant3": {
+    "rounds": 8,
+    "pickSeconds": { "first": 15, "next": 5 },
+    "maxRun": 3,
+    "spinMs": 1800,
+    "wheelLayout": [3, 1, 2, 0, 2, 1, 2, 1],
+    "linear": {
+      "jistota": { "base": 0, "rate": 4 },
+      "prilezitost": { "base": -24, "rate": 20 },
+      "vrchol": { "base": -54, "rate": 40 }
+    }
+  },
+  "effects": { "bigWin": 50, "bigLoss": -40 },
+  "scoring": {
+    "gameRiskWeight": 0.8,
+    "gameRecoveryWeight": 0.2,
+    "finalGameWeight": 0.7,
+    "finalQuizWeight": 0.3,
+    "minRecoveryRounds": 2,
+    "minRoundsIncomplete": 5,
+    "quizNoAnswerScore": 50
+  },
+  "tutorial": {
+    "1": [
+      "Máš {attempts} pokusy, každý trvá {seconds} s a začínáš se {start} body.",
+      "Vyber jednu ze tří cest. Ukáže se kartička: slunce, nebo mráček. Každá cesta má jiné bodování, vidíš ho na tlačítku.",
+      "Pozor, u Vrcholu mráček vrátí body na nulu."
+    ],
+    "2": [
+      "Hraješ {rounds} kol a začínáš se {start} body.",
+      "V každém kole vyber jednu ze tří cest. Pak se zatočí tři kartičky a každá ukáže slunce, nebo mráček.",
+      "Počet sluncí určí, kolik bodů získáš nebo ztratíš. Tabulku výher vidíš pod každou cestou."
+    ],
+    "3": [
+      "{rounds} kol, start s {start} body.",
+      "Vyber jeden ze tří kotoučů. Čas: {pickFirst} s v 1. kole, pak {pickNext} s.",
+      "Kliknutím na možnost kotouč prohlédneš, můžeš přepínat. Kliknutím na kotouč ho zamkneš a roztočíš. Po vypršení času se roztočí ten, který vidíš.",
+      "Číslo, kde se kotouč zastaví, je výhra nebo ztráta.",
+      "Jistota je klidná, Vrchol má velké výhry i ztráty."
+    ]
+  },
+  "profiles": [
+    { "id": "opatrny_strateg", "max": 40, "name": "Opatrný stratég", "icon": "shield",
+      "intro": "Riziko si nejdřív promyslíš.",
+      "description": "Raději volíš jistější cestu a chráníš to, co už máš. Do většího rizika jdeš, až když ti dává smysl.",
+      "motto": "Nejdřív přemýšlet, potom riskovat." },
+    { "id": "rozvazny_riskr", "max": 59, "name": "Rozvážný riskér", "icon": "scale",
+      "intro": "Umíš riskovat, ale ne za každou cenu.",
+      "description": "Podle situace střídáš jistotu a odvážnější rozhodnutí. Když potenciální odměna stojí za riziko, dokážeš do něj jít.",
+      "motto": "Risk ano, ale musí se vyplatit." },
+    { "id": "odvazny_experimentator", "max": 100, "name": "Odvážný experimentátor", "icon": "flame",
+      "intro": "Rizika se nebojíš.",
+      "description": "Často dáváš přednost šanci na velký úspěch před jistým, ale menším výsledkem. Někdy ti to přinese vrchol, jindy tvrdý restart.",
+      "motto": "Kdo neriskuje, nevyhraje." }
+  ],
+  "quiz": {
+    "timeSec": 13,
+    "count": 5,
+    "questions": [
+      { "id": 1, "text": "Jdeš na výlet a předpověď hlásí možnost deště.", "answers": ["Vezmu si deštník.", "Ráno se podívám na radar.", "Neřeším to."] },
+      { "id": 2, "text": "Máš k dispozici 10 000 Kč navíc.", "answers": ["Uložím je na účet.", "Část odložím, část utratím.", "Investuji je."] },
+      { "id": 3, "text": "Zítra máš termín odevzdání školní práce.", "answers": ["Udělám ji s předstihem.", "Dokončím ji dnes večer.", "Udělám ji na poslední chvíli před hodinou."] },
+      { "id": 4, "text": "Pouštíš se do nové aktivity (např. sportu).", "answers": ["Nejdřív si zjistím, co mě čeká a co budu potřebovat.", "Zkusím to bez příprav, ale opatrně.", "Jdu do toho rovnou, něco se vymyslí."] },
+      { "id": 5, "text": "Jak to máš s hesly?", "answers": ["Silná a unikátní.", "Podobná, aby se snadno pamatovala.", "Jedno heslo na všechno, ať se nikam nezamknu."] }
+    ]
+  },
+  "texts": {
+    "title": "Expedice",
+    "loading": "Načítám…",
+    "loadError": "Hru se teď nepodařilo načíst.",
+    "intro": "Jak se hraje",
+    "introGoal": "Cíl: nasbírej co nejvíc bodů.",
+    "introNoTime": "Čas zatím neběží. Začne až po stisknutí tlačítka.",
+    "play": "Rozumím, hrát",
+    "menuPlay": "Hrát",
+    "pickWheel": "Vyber kotouč",
+    "spinHint": "Klikni na kotouč a roztoč ho",
+    "continue": "Pokračovat",
+    "giveUp": "Vzdát se",
+    "giveUpConfirm": "Opravdu se vzdát? Dosavadní hra se započítá.",
+    "giveUpYes": "Ano, vzdát se",
+    "giveUpNo": "Hrát dál",
+    "hint": "Vyber cestu",
+    "trans1a": "Vyhodnocuji tvůj rizikový profil…",
+    "trans1b": "Ještě se tě potřebuji doptat, jak se chováš v různých situacích. Na každou otázku máš jen {sec} sekund.",
+    "trans2": "Analyzuji tvé odpovědi…",
+    "noData": "Zatím nemáme dost údajů na tvou kartu.",
+    "funFact": "Průměrně se vyplatily všechny tři cesty stejně, lišily se jen tím, jak moc kolísaly.",
+    "menuTitle": "Vyber variantu",
+    "variants": {
+      "1": "Originál – jedna kartička se sluncem nebo mráčkem, tři pokusy na čas.",
+      "2": "MJ – tři točící se kartičky, pevný počet kol bez časového limitu.",
+      "3": "Vyvážená – tři kotouče štěstí, vybereš jeden a roztočíš ho. Na výběr máš omezený čas."
+    }
+  }
+}
