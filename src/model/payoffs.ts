@@ -21,6 +21,14 @@ export function payoffV3(button: ButtonId, stars: number, cfg: GameConfig = conf
   return l.base + l.rate * stars;
 }
 
+export function isResetV3(button: ButtonId, stars: number, cfg: GameConfig = config) {
+  return button === cfg.variant3.reset.button && stars === cfg.variant3.reset.stars;
+}
+
+export function payoffV3Points(button: ButtonId, stars: number, total: number, cfg: GameConfig = config) {
+  return isResetV3(button, stars, cfg) ? (total === 0 ? 0 : -total) : payoffV3(button, stars, cfg);
+}
+
 /** Payout per number of suns (0..3) for variants 2–3. */
 export function payoutRow(variant: 2 | 3, button: ButtonId, scenario: Scenario, cfg: GameConfig = config): number[] {
   return [0, 1, 2, 3].map((s) => (variant === 2 ? payoffV2(button, s, scenario, cfg) : payoffV3(button, s, cfg)));

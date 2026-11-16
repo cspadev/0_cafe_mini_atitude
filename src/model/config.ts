@@ -28,6 +28,7 @@ export type GameConfig = {
     rounds: number; pickSeconds: { first: number; next: number }; maxRun: number; spinMs: number;
     /** Suns (0..3) assigned to each wheel segment, clockwise from the top. */
     wheelLayout: number[];
+    reset: { button: ButtonId; stars: number };
     linear: Record<ButtonId, { base: number; rate: number }>;
   };
   effects: { bigWin: number; bigLoss: number };

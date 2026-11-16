@@ -43,10 +43,11 @@
     "maxRun": 3,
     "spinMs": 1800,
     "wheelLayout": [3, 1, 2, 0, 2, 1, 2, 1],
+    "reset": { "button": "vrchol", "stars": 0 },
     "linear": {
       "jistota": { "base": 0, "rate": 4 },
       "prilezitost": { "base": -24, "rate": 20 },
-      "vrchol": { "base": -54, "rate": 40 }
+      "vrchol": { "base": -60, "rate": 50 }
     }
   },
   "effects": { "bigWin": 50, "bigLoss": -40 },
@@ -73,8 +74,8 @@
     "3": [
       "{rounds} kol, start s {start} body.",
       "Vyber jeden ze tří kotoučů. Čas: {pickFirst} s v 1. kole, pak {pickNext} s.",
-      "Kliknutím na možnost kotouč prohlédneš, můžeš přepínat. Kliknutím na kotouč ho zamkneš a roztočíš. Po vypršení času se roztočí ten, který vidíš.",
-      "Číslo, kde se kotouč zastaví, je výhra nebo ztráta.",
+      "Klikni na jeden ze tří kotoučů a hned se roztočí. Po vypršení času se náhodně roztočí jeden z nich.",
+      "Číslo, kde se kotouč zastaví, je výhra nebo ztráta. U Vrcholu pole NA 0 vynuluje všechny body.",
       "Jistota je klidná, Vrchol má velké výhry i ztráty."
     ]
   },

@@ -2,11 +2,19 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, expect, it, vi } from "vitest";
 import { config } from "@/model/config";
 import { mulberry32 } from "@/model/rng";
+import { Wheel } from "@/ui/Wheel";
 import { RoundsVariant } from "@/variants/RoundsVariant";
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+});
+
+it("clearly marks the Vrchol reset segment in dark red", () => {
+  const { container } = render(<Wheel id="vrchol" />);
+  expect(screen.getByText("NA 0")).toHaveAttribute("fill", "var(--destructive-foreground)");
+  expect(container.querySelectorAll("path")[3]).toHaveAttribute("fill", "var(--destructive)");
+  expect(screen.getByText("+81")).toBeInTheDocument();
 });
 
 it("keeps a wheel at its landing angle between rounds and spins forward again", async () => {

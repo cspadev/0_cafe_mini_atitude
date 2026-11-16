@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BUTTON_IDS } from "@/model/config";
-import { payoffV3, payoutRow, stats, wheelSegment, wheelValues } from "@/model/payoffs";
+import { payoffV3, payoffV3Points, payoutRow, stats, wheelSegment, wheelValues } from "@/model/payoffs";
 import { balancedStars } from "@/model/sequence";
 import { mulberry32 } from "@/model/rng";
 import { finalScore, gameScore, profileFor, quizScore, recoveryScore, type Choice } from "@/model/scoring";
@@ -11,6 +11,12 @@ import { buildOutput } from "@/model/output";
 const ch = (level: number, stars: number): Choice => ({ round: 1, button: BUTTON_IDS[level]!, level, stars, points: 0, total: 0, reactionMs: 1 });
 
 describe("variant 3", () => {
+  it("Vrchol resets to zero on no suns and pays 81 on three suns", () => {
+    expect(payoffV3Points("vrchol", 0, 100)).toBe(-100);
+    expect(payoffV3Points("vrchol", 0, 0)).toBe(0);
+    expect(payoffV3Points("vrchol", 3, 100)).toBe(81);
+    expect(payoffV3Points("prilezitost", 0, 100)).toBe(-24);
+  });
   it("all buttons have mean exactly 6.0", () => {
     for (const id of BUTTON_IDS) expect(stats(payoutRow(3, id, "B")).mean).toBe(6);
   });

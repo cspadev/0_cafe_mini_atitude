@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { config, BUTTON_IDS, type ButtonId, type Scenario } from "@/model/config";
-import { payoffV2, payoffV3, payoutRow, wheelSegment } from "@/model/payoffs";
+import { payoffV2, payoffV3Points, payoutRow, wheelSegment } from "@/model/payoffs";
 import { balanced, independent, type Draw } from "@/model/sequence";
 import type { Rng } from "@/model/rng";
 import type { Choice } from "@/model/scoring";
@@ -74,7 +74,7 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
     if (busy || round >= rounds) return;
     const reactionMs = Math.round(performance.now() - roundStart.current);
     const d = draws[round]!;
-    const points = variant === 2 ? payoffV2(id, d.stars, scenario) : id === "vrchol" && d.stars === 0 ? -total : payoffV3(id, d.stars);
+    const points = variant === 2 ? payoffV2(id, d.stars, scenario) : payoffV3Points(id, d.stars, total);
     setBusy(true);
     if (variant === 3) {
       const seg = segments[round]!;

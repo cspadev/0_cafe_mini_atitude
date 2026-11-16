@@ -1,5 +1,5 @@
 import { config, type ButtonId } from "@/model/config";
-import { wheelValues } from "@/model/payoffs";
+import { isResetV3, wheelValues } from "@/model/payoffs";
 import { Confetti } from "./Cards";
 import { ButtonIcon, CHOICE_STYLE } from "./art";
 import { fmt } from "./Points";
@@ -16,9 +16,6 @@ function segmentFill(v: number) {
   if (v === 0) return "var(--cloud-bg)";
   return v >= config.effects.bigWin ? "var(--sun)" : "var(--sun-glow)";
 }
-
-/** Vrchol's zero-sun segment resets the total to 0. */
-const resets = (id: ButtonId, segment: number) => id === "vrchol" && config.variant3.wheelLayout[segment] === 0;
 
 type WheelProps = { id: ButtonId; rotation?: number; spinMs?: number; labels?: boolean; winIndex?: number | undefined; className?: string };
 
@@ -37,7 +34,7 @@ export function Wheel({ id, rotation = 0, spinMs = 0, labels = true, winIndex, c
             <path
               key={i}
               d={`M0 0 L${pt(i * step, R)} A${R} ${R} 0 0 1 ${pt((i + 1) * step, R)} Z`}
-              fill={segmentFill(v)}
+              fill={isResetV3(id, config.variant3.wheelLayout[i]!) ? "var(--destructive)" : segmentFill(v)}
               stroke={i === winIndex ? "var(--foreground)" : "var(--card)"}
               strokeWidth={i === winIndex ? 4 : 2}
               strokeLinejoin="round"
@@ -49,11 +46,11 @@ export function Wheel({ id, rotation = 0, spinMs = 0, labels = true, winIndex, c
               transform={`rotate(${(i + 0.5) * step}) translate(0 -62)`}
               textAnchor="middle"
               dominantBaseline="middle"
-              fontSize="17"
+              fontSize={isResetV3(id, config.variant3.wheelLayout[i]!) ? "15" : "17"}
               fontWeight="800"
-              fill="var(--foreground)"
+              fill={isResetV3(id, config.variant3.wheelLayout[i]!) ? "var(--destructive-foreground)" : "var(--foreground)"}
             >
-              {resets(id, i) ? "→0" : fmt(v)}
+              {isResetV3(id, config.variant3.wheelLayout[i]!) ? "NA 0" : fmt(v)}
             </text>
           ))}
         </svg>
