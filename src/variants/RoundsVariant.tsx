@@ -38,7 +38,7 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
   const [busy, setBusy] = useState(false);
   const [cards, setCards] = useState<boolean[]>([false, false, false]);
   const [spin, setSpin] = useState<Spin | null>(null);
-  const [selected, setSelected] = useState<ButtonId | null>(null);
+  const [rotations, setRotations] = useState<Record<ButtonId, number>>({ jistota: 0, prilezitost: 0, vrchol: 0 });
   const [settled, setSettled] = useState(false);
   const [effect, setEffect] = useState<"none" | "win" | "loss">("none");
   const [timeLeft, setTimeLeft] = useState(0);
@@ -57,7 +57,6 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
       setTimeout(() => {
         setOpen(false);
         setSpin(null);
-        setSelected(null);
         setSettled(false);
         setEffect("none");
         const next = round + 1;
@@ -75,14 +74,17 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
     if (busy || round >= rounds) return;
     const reactionMs = Math.round(performance.now() - roundStart.current);
     const d = draws[round]!;
-    const points = variant === 2 ? payoffV2(id, d.stars, scenario) : payoffV3(id, d.stars);
+    const points = variant === 2 ? payoffV2(id, d.stars, scenario) : id === "vrchol" && d.stars === 0 ? -total : payoffV3(id, d.stars);
     setBusy(true);
     if (variant === 3) {
       const seg = segments[round]!;
       const segDeg = 360 / config.variant3.wheelLayout.length;
       const jitter = (Math.random() - 0.5) * segDeg * 0.6;
-      setSelected(id);
-      setSpin({ id, winIndex: seg, points, target: 360 * 5 - (seg + 0.5) * segDeg + jitter });
+      const previous = rotations[id];
+      const destination = -(seg + 0.5) * segDeg + jitter;
+      const target = previous + 360 * 5 + ((destination - previous) % 360 + 360) % 360;
+      setRotations({ ...rotations, [id]: target });
+      setSpin({ id, winIndex: seg, points, target });
       reveal({ id, d, points, reactionMs }, config.variant3.spinMs + 300);
       return;
     }
@@ -95,11 +97,9 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
     reveal({ id, d, points, reactionMs }, revealMs(3));
   };
 
-  const select = (id: ButtonId) => { if (!busy) setSelected(id); };
-
-  // Wheel choice is timed; on timeout the shown wheel spins (random one if none is shown).
+  // Wheel choice is timed; on timeout a random wheel spins.
   const timeoutRef = useRef(() => {});
-  timeoutRef.current = () => pick(selected ?? BUTTON_IDS[Math.floor(Math.random() * BUTTON_IDS.length)]!);
+  timeoutRef.current = () => pick(BUTTON_IDS[Math.floor(Math.random() * BUTTON_IDS.length)]!);
   useEffect(() => {
     if (variant !== 3 || busy) return;
     const end = performance.now() + pickLimit * 1000;
@@ -114,10 +114,10 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
     return () => cancelAnimationFrame(raf);
   }, [variant, busy, round, pickLimit]);
 
-  useChoiceKeys(order, !busy, variant === 3 ? select : pick);
+  useChoiceKeys(order, !busy, pick);
 
   const payouts = Object.fromEntries(
-    BUTTON_IDS.map((id) => [id, <PayoutGrid key={id} row={payoutRow(variant, id, scenario)} wheel={variant === 3} />]),
+    BUTTON_IDS.map((id) => [id, <PayoutGrid key={id} row={payoutRow(variant, id, scenario)} wheel={false} />]),
   ) as Record<ButtonId, React.ReactNode>;
 
   const timing = variant === 3 && !busy;
@@ -135,14 +135,16 @@ export function RoundsVariant({ variant, rounds, startPoints, scenario, rng, ord
       )}
       <Points value={total} label="Body" />
       {variant === 3
-        ? <WheelStage order={order} selected={selected} spin={spin} settled={settled} effect={effect} onSelect={select} onSpin={() => selected && pick(selected)} />
+        ? <WheelStage order={order} rotations={rotations} spin={spin} settled={settled} effect={effect} onSpin={pick} />
         : <Cards cards={cards} open={open} effect={effect} />}
       <p className="h-6 text-center font-bold text-primary" aria-live="polite">
-        {variant === 2 ? (hint ? config.texts["hint"] : "") : (timing ? config.texts[selected ? "spinHint" : "pickWheel"] : "")}
+        {variant === 2 ? (hint ? config.texts["hint"] : "") : (timing ? config.texts["pickWheel"] : "")}
       </p>
-      <div className="mt-auto">
-        <ChoiceButtons order={order} disabled={busy} onPick={variant === 3 ? select : pick} payouts={payouts} selected={variant === 3 ? selected : undefined} />
-      </div>
+      {variant === 2 && (
+        <div className="mt-auto">
+          <ChoiceButtons order={order} disabled={busy} onPick={pick} payouts={payouts} />
+        </div>
+      )}
     </div>
   );
 }

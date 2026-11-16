@@ -17,6 +17,9 @@ function segmentFill(v: number) {
   return v >= config.effects.bigWin ? "var(--sun)" : "var(--sun-glow)";
 }
 
+/** Vrchol's zero-sun segment resets the total to 0. */
+const resets = (id: ButtonId, segment: number) => id === "vrchol" && config.variant3.wheelLayout[segment] === 0;
+
 type WheelProps = { id: ButtonId; rotation?: number; spinMs?: number; labels?: boolean; winIndex?: number | undefined; className?: string };
 
 /** One wheel of fortune; rotation is cumulative degrees (clockwise). Only the disc rotates. */
@@ -50,7 +53,7 @@ export function Wheel({ id, rotation = 0, spinMs = 0, labels = true, winIndex, c
               fontWeight="800"
               fill="var(--foreground)"
             >
-              {fmt(v)}
+              {resets(id, i) ? "→0" : fmt(v)}
             </text>
           ))}
         </svg>
@@ -70,45 +73,39 @@ export function Wheel({ id, rotation = 0, spinMs = 0, labels = true, winIndex, c
 export type Spin = { id: ButtonId; target: number; winIndex: number; points: number };
 
 type StageProps = {
-  order: ButtonId[]; selected: ButtonId | null; spin: Spin | null; settled: boolean; effect: "none" | "win" | "loss";
-  onSelect: (id: ButtonId) => void; onSpin: () => void;
+  order: ButtonId[]; rotations: Record<ButtonId, number>; spin: Spin | null; settled: boolean; effect: "none" | "win" | "loss";
+  onSpin: (id: ButtonId) => void;
 };
 
-/** Small wheels to browse; the selected one is shown whole and spins (locking the choice) when clicked. */
-export function WheelStage({ order, selected, spin, settled, effect, onSelect, onSpin }: StageProps) {
-  const shown = spin?.id ?? selected;
+/** All wheels fully visible; clicking one locks the choice and spins it immediately. */
+export function WheelStage({ order, rotations, spin, settled, effect, onSpin }: StageProps) {
   return (
-    <div className={`relative flex h-64 items-center justify-center sm:h-72 ${effect === "win" ? "anim-pop" : effect === "loss" ? "anim-shake" : ""}`}>
-      {shown ? (
-        <div key={shown} className="anim-rise relative flex flex-col items-center gap-1">
-          <button
-            type="button"
-            disabled={!!spin}
-            onClick={onSpin}
-            aria-label={config.texts["spinHint"]}
-            className="rounded-full drop-shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring enabled:cursor-pointer enabled:hover:scale-105 enabled:motion-safe:animate-pulse disabled:cursor-default"
-          >
-            <Wheel
-              id={shown}
-              rotation={spin ? spin.target : 0}
-              spinMs={config.variant3.spinMs}
-              winIndex={settled ? spin?.winIndex : undefined}
-              className="size-52 sm:size-60"
-            />
-          </button>
-          <div className="tabular flex h-8 items-center rounded-full bg-card/90 px-4 text-lg font-extrabold shadow-[var(--shadow-card)]" aria-live="polite">
-            {spin ? (settled ? fmt(spin.points) : "…") : config.texts["spinHint"]}
-          </div>
-        </div>
-      ) : (
-        <div className="flex w-full justify-center gap-2">
-          {order.map((id) => (
-            <button key={id} type="button" onClick={() => onSelect(id)} aria-label={config.buttons[id].label} className="min-w-0 max-w-32 flex-1 rounded-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring">
-              <Wheel id={id} labels={false} className="aspect-square w-full drop-shadow-md" />
+    <div className={`relative flex items-start justify-center gap-2 py-2 ${effect === "win" ? "anim-pop" : effect === "loss" ? "anim-shake" : ""}`}>
+      {order.map((id) => {
+        const mine = spin?.id === id;
+        return (
+          <div key={id} className={`flex min-w-0 max-w-52 flex-1 flex-col items-center gap-1 transition-opacity ${spin && !mine ? "opacity-40" : ""}`}>
+            <button
+              type="button"
+              disabled={!!spin}
+              onClick={() => onSpin(id)}
+              aria-label={config.buttons[id].label}
+              className="w-full rounded-full drop-shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring enabled:cursor-pointer enabled:hover:scale-105 disabled:cursor-default"
+            >
+              <Wheel
+                id={id}
+                rotation={rotations[id]}
+                spinMs={config.variant3.spinMs}
+                winIndex={mine && settled ? spin.winIndex : undefined}
+                className="aspect-square w-full"
+              />
             </button>
-          ))}
-        </div>
-      )}
+            <div className="tabular flex h-8 items-center rounded-full bg-card/90 px-3 text-sm font-extrabold shadow-[var(--shadow-card)]" aria-live="polite">
+              {mine ? (settled ? fmt(spin.points) : "…") : config.buttons[id].label}
+            </div>
+          </div>
+        );
+      })}
       {effect === "win" && <Confetti />}
     </div>
   );

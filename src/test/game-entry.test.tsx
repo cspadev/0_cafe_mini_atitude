@@ -1,7 +1,7 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { config } from "@/model/config";
-import { GameEntry } from "@/routes/index";
+import { GameEntry } from "@/GameEntry";
 
 vi.mock("@/Game", () => ({ Game: () => <div>Full game</div> }));
 vi.mock("@/Placeholder", () => ({ Placeholder: () => <div>Placeholder</div> }));
